@@ -1,5 +1,5 @@
-#LudopatiaDC
-##Simulador de venta de lotería a lo loco
+# LudopatiaDC
+## Simulador de venta de lotería a lo loco
 
 Modelo:
 --------
