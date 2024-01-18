@@ -1,19 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ludopatiaaaa DC{% endblock %}
+{% block title %}Ludopatiaaaa DC
+{% endblock %}
 
 {% block body %}
-    <h1>Ludopatiaaaa DC</h1>
-    {% if is_granted('ROLE_ADMIN') %}
-    <a href="/user">Administrar usuarios</a>
-    <a href="/sorteo/new">Crear Sorteo</a>
-    {% else %}
-    <h3>comprar cupones:</h3>
-    {% for sorteo in sorteos %}
-        {{ sorteo.name }}
-        <br>
-    {% endfor %}
-    {% endif %}
+	<h1>Ludopatiaaaa DC</h1>
+	{% if is_granted('ROLE_ADMIN') %}
+		<a href="/user">Administrar usuarios</a>
+		<a href="/sorteo/new">Crear Sorteo</a>
+	{% else %}
+		<h3>comprar cupones:</h3>
+		{% for sorteo in sorteos %}
+			<fieldset>
+				{{ sorteo.name }}
+				<a href="/sorteo/{{sorteo.id}}">Comprar Cupón</a>
+			</fieldset>
+			<br>
+		{% endfor %}
+	{% endif %}
 
 
 {% endblock %}

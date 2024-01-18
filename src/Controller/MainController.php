@@ -3,9 +3,12 @@
 namespace App\Controller;
 
 use App\Repository\SorteoRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 class MainController extends AbstractController
 {
@@ -23,5 +26,26 @@ class MainController extends AbstractController
             ]);
         }
         return $this->redirectToRoute('app_login');
+    }
+    #[Route('/addcash', name: 'app_add_cash')]
+    public function addCash(Request $request, EntityManagerInterface $entityInterface){
+        if ($this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
+            if($request->request->get("cash")){
+                $cash = $request->request->get("cash");
+                $actualCash = $this->getUser()->getCash();
+                $actualCash += $cash;
+                $this->getUser()->setCash($actualCash);
+
+                $entityInterface->flush();
+
+                return $this->redirectToRoute('app_main');
+                
+            }
+
+            return $this->render('main/add_cash.html.twig', [
+                'controller' => 'MainController',
+            ]);
+        }
+        return $this->redirectToRoute('app_main');
     }
 }

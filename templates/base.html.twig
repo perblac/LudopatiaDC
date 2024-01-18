@@ -1,22 +1,32 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
-        {% block javascripts %}
-        {% endblock %}
-    </head>
-    <body>
-        {% if app.user %}
-            Hola {{ app.user.username }} - <a href="/logout">Logout</a> - <a href="/">Main</a>
-            <hr>
-            {% block body %}{% endblock %}
-            {% else %}
-            <h1>No está logeado, por favor haga <a href="/login">Login</a></h1>
-            {% endif %}
-    </body>
-</html>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>"> {% block stylesheets %}{% endblock %}{% block javascripts %}{% endblock %}
+		</head>
+		<body>
+			{% if app.user %}
+				Hola
+				{{ app.user.username }}
+				-
+				<a href="/logout">Logout</a>
+				-
+				<a href="/">Main</a>
+				{% if not is_granted('ROLE_ADMIN') %}
+					-
+					<a href="/addcash">Añadir saldo</a>
+				{% endif %}
+				<hr>
+				{% block body %}{% endblock %}
+			{% else %}
+				<h1>No está logeado, por favor haga
+					<a href="/login">Login</a>
+				</h1>
+			{% endif %}
+		</body>
+	</html>
+</body></html>

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sorteo
+{% endblock %}
+
+{% block body %}
+	<h1>Sorteo:
+		{{sorteo.name}}</h1>
+
+	<table class="table">
+		<tbody>
+			<tr>
+				<th>SorteoDate</th>
+				<td>{{ sorteo.sorteoDate ? sorteo.sorteoDate|date('Y-m-d H:i:s') : '' }}</td>
+			</tr>
+			<tr>
+				<th>CouponPrice</th>
+				<td>{{ sorteo.couponPrice }}</td>
+			</tr>
+			<tr>
+				<th>TotalCoupons</th>
+				<td>{{ sorteo.totalCoupons }}</td>
+			</tr>
+			<tr>
+				<th>Prize</th>
+				<td>{{ sorteo.prize }}</td>
+			</tr>
+		</tbody>
+	</table>
+	{% for coupon in coupons %}
+		{% if coupon.state == 0 %}
+			<a href="">{{coupon.number}}</a>
+		{% endif %}
+	{% endfor %}
+	<a href="{{ path('app_main') }}">back to Main</a>
+
+
+{% endblock %}

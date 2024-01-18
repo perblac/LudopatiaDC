@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ludopatiaaaa DC
+{% endblock %}
+
+{% block body %}
+	<h1>Ludopatiaaaa DC</h1>
+	<fieldset>
+		<form action="/addcash" method="POST">
+			<label>Cantidad a ingresar:</label>
+			<input type="number" name="cash">
+			<button type="submit">Añadir</button>
+		</form>
+	</fieldset>
+{% endblock %}

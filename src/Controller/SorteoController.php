@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_ADMIN')]
+//#[IsGranted('ROLE_ADMIN')]
 #[Route('/sorteo')]
 class SorteoController extends AbstractController
 {
@@ -24,10 +24,11 @@ class SorteoController extends AbstractController
             'sorteos' => $sorteoRepository->findAll(),
         ]);
     }
-
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'app_sorteo_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+
         $sorteo = new Sorteo();
         $form = $this->createForm(SorteoType::class, $sorteo);
         $form->handleRequest($request);
@@ -35,7 +36,7 @@ class SorteoController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // crear cupones
-            for ($numero = 1; $numero <= $sorteo->getTotalCoupons(); $numero++) {
+            for ($numero = $sorteo->getTotalCoupons(); $numero >= 1; $numero--) {
                 $cupon = new Coupon();
                 $cupon->setNumber($numero);
                 $cupon->setState(0);
@@ -54,14 +55,26 @@ class SorteoController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_sorteo_show', methods: ['GET'])]
-    public function show(Sorteo $sorteo): Response
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/admin/{id}', name: 'app_sorteo_show_admin', methods: ['GET'])]
+    public function showAdmin(Sorteo $sorteo): Response
     {
         return $this->render('sorteo/show.html.twig', [
             'sorteo' => $sorteo,
         ]);
     }
 
+    #[Route('/{id}', name: 'app_sorteo_show', methods: ['GET'])]
+    public function show(Sorteo $sorteo): Response
+    {   
+        $coupons = $sorteo->getCoupons();
+        return $this->render('sorteo/buyCoupons.html.twig', [
+            'sorteo' => $sorteo,
+            'coupons' => $coupons,
+        ]);
+    }
+    
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'app_sorteo_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Sorteo $sorteo, EntityManagerInterface $entityManager): Response
     {
@@ -80,6 +93,7 @@ class SorteoController extends AbstractController
         ]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/{id}', name: 'app_sorteo_delete', methods: ['POST'])]
     public function delete(Request $request, Sorteo $sorteo, EntityManagerInterface $entityManager): Response
     {

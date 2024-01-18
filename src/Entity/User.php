@@ -34,6 +34,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Coupon::class)]
     private Collection $coupons;
 
+    #[ORM\Column(nullable: false)]
+    private ?int $cash = 0;
+
     public function __construct()
     {
         $this->coupons = new ArrayCollection();
@@ -135,6 +138,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $coupon->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCash(): ?int
+    {
+        return $this->cash;
+    }
+
+    public function setCash(?int $cash): static
+    {
+        $this->cash = $cash;
 
         return $this;
     }
