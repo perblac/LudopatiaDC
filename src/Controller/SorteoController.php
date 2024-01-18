@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Coupon;
 use App\Entity\Sorteo;
 use App\Form\SorteoType;
 use App\Repository\SorteoRepository;
@@ -10,7 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
 #[Route('/sorteo')]
 class SorteoController extends AbstractController
 {
@@ -30,6 +33,15 @@ class SorteoController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // crear cupones
+            for ($numero = 1; $numero <= $sorteo->getTotalCoupons(); $numero++) {
+                $cupon = new Coupon();
+                $cupon->setNumber($numero);
+                $cupon->setState(0);
+                $entityManager->persist($cupon);
+                $sorteo->addCoupon($cupon);
+            }
             $entityManager->persist($sorteo);
             $entityManager->flush();
 

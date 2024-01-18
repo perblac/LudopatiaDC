@@ -22,7 +22,7 @@ class Coupon
     private ?Sorteo $sorteo = null;
 
     #[ORM\ManyToOne(inversedBy: 'coupons')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $owner = null;
 
     #[ORM\Column(type: Types::SMALLINT)]

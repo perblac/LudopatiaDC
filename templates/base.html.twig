@@ -11,6 +11,12 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% if app.user %}
+            Hola {{ app.user.username }} - <a href="/logout">Logout</a> - <a href="/">Main</a>
+            <hr>
+            {% block body %}{% endblock %}
+            {% else %}
+            <h1>No está logeado, por favor haga <a href="/login">Login</a></h1>
+            {% endif %}
     </body>
 </html>

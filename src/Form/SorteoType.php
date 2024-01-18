@@ -19,10 +19,10 @@ class SorteoType extends AbstractType
             ->add('couponPrice')
             ->add('totalCoupons')
             ->add('prize')
-            ->add('winnerCoupon', EntityType::class, [
-                'class' => Coupon::class,
-'choice_label' => 'id',
-            ])
+//             ->add('winnerCoupon', EntityType::class, [
+//                 'class' => Coupon::class,
+// 'choice_label' => 'id',
+//             ])
         ;
     }
 
