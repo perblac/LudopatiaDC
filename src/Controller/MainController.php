@@ -28,7 +28,7 @@ class MainController extends AbstractController
         return $this->redirectToRoute('app_login');
     }
     #[Route('/addcash', name: 'app_add_cash')]
-    public function addCash(Request $request, EntityManagerInterface $entityInterface){
+    public function addCash(Request $request, EntityManagerInterface $entityManager){
         if ($this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             if($request->request->get("cash")){
                 $cash = $request->request->get("cash");
@@ -36,7 +36,7 @@ class MainController extends AbstractController
                 $actualCash += $cash;
                 $this->getUser()->setCash($actualCash);
 
-                $entityInterface->flush();
+                $entityManager->flush();
 
                 return $this->redirectToRoute('app_main');
                 

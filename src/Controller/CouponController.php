@@ -50,6 +50,52 @@ class CouponController extends AbstractController
         ]);
     }
 
+    
+    #[Route('/buy/{id}', name: 'app_coupon_buy', methods: ['GET','POST'])]
+    public function buyCoupon(Coupon $coupon, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $state = 0;
+        $sorteo = $coupon->getSorteo();
+        $precioCupon = $coupon->getSorteo()->getCouponPrice();
+        $user = $this->getUser();
+        $saldoUser = $user->getCash();
+
+        if ($saldoUser < $precioCupon) {
+            // no hay pasta, state a 1 para notificarlo en la vista
+            $state = 1;
+        }
+
+        if ($coupon->getState() != 0) {
+            $state = 2;
+        }
+
+        if ($request->request->get('buy') && $state == 0) {
+            // se compra el cupon:
+            // restamos pelas
+            $saldoUser -= $precioCupon;
+            // damos el cupon al user
+            $coupon->setOwner($user);
+            $coupon->setState(1);
+            $entityManager->persist($coupon);
+
+            $user->setCash($saldoUser);
+            $user->addCoupon($coupon);
+            $entityManager->persist($user);
+            // grabamos
+            $entityManager->flush();
+
+            //volvemos a lista cupones
+            return $this->redirectToRoute('app_sorteo_show', [
+                'id' => $sorteo->getId(),
+            ], Response::HTTP_SEE_OTHER);
+        }
+        return $this->render('coupon/buyCoupon.html.twig', [
+            'coupon' => $coupon,
+            'state' => $state,
+            'sorteo' => $sorteo,
+        ]);
+    }
+
     #[Route('/{id}/edit', name: 'app_coupon_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Coupon $coupon, EntityManagerInterface $entityManager): Response
     {

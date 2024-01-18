@@ -29,9 +29,10 @@
 	</table>
 	{% for coupon in coupons %}
 		{% if coupon.state == 0 %}
-			<a href="">{{coupon.number}}</a>
+			<a href="/coupon/buy/{{coupon.id}}">{{coupon.number}}</a>
 		{% endif %}
 	{% endfor %}
+	<br>
 	<a href="{{ path('app_main') }}">back to Main</a>
 
 

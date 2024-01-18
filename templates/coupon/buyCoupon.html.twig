@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Coupon{% endblock %}
+
+{% block body %}
+    {% if state == 1 %}
+        <script>alert("Estas pobre!")</script>
+    {% elseif state == 2 %}
+        <script>alert("No disponible!")</script>
+    {% else %}
+    <h1>Cupon nº {{ coupon.number }}</h1>
+    <h2>Del sorteo {{ sorteo.name }} </h2>
+    <h3>Precio: {{ sorteo.couponPrice }} €</h3>
+    <form action="/coupon/buy/{{coupon.id}}" method="POST">
+        <input type="submit" value="Comprar" name="buy">
+    </form>
+    {% endif %}
+
+
+
+    <a href="/sorteo/{{sorteo.id}}">Volver atras</a>
+{% endblock %}

@@ -19,6 +19,8 @@
 				{% if not is_granted('ROLE_ADMIN') %}
 					-
 					<a href="/addcash">Añadir saldo</a>
+					-
+					Saldo actual: {{ app.user.cash }}
 				{% endif %}
 				<hr>
 				{% block body %}{% endblock %}
