@@ -13,7 +13,7 @@ Sorteo
 - Premio int
 - NumGanador Relation [Cupon]
 ---------
-Usuarios
+Usuarios - User
 --------
 - Id int
 - Nombre string
@@ -22,7 +22,7 @@ Usuarios
 - Cartilla int
 - Cupones Relation [Cupon]
 ---------
-Cupones
+Cupones - Coupon
 --------
 - Id int
 - Número string
