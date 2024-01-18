@@ -9,14 +9,8 @@
 		<a href="/user">Administrar usuarios</a>
 		<a href="/sorteo/new">Crear Sorteo</a>
 	{% else %}
-		<h3>comprar cupones:</h3>
-		{% for sorteo in sorteos %}
-			<fieldset>
-				{{ sorteo.name }}
-				<a href="/sorteo/{{sorteo.id}}">Comprar Cupón</a>
-			</fieldset>
-			<br>
-		{% endfor %}
+		<a href="{{ path('app_main_view_sorteos') }}">Comprar cupones</a><br>		
+		<a href="{{ path('app_main_view_coupons') }}">Ver mis cupones</a>
 	{% endif %}
 
 

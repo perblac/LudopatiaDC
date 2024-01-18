@@ -16,17 +16,52 @@ class MainController extends AbstractController
     public function index(SorteoRepository $sorteoRepository): Response
     {
         if ($this->getUser()) {
+            // $sorteos = [];
+            // if (!$this->isGranted('ROLE_ADMIN')) {
+            //     $sorteos = $sorteoRepository->findAll();
+            // }
+            return $this->render('main/index.html.twig', [
+                'controller_name' => 'MainController',
+                // 'sorteos' => $sorteos,
+            ]);
+        }
+        return $this->redirectToRoute('app_login');
+    }
+
+    #[Route('/viewsorteos', name: 'app_main_view_sorteos')]
+    public function viewSorteos(SorteoRepository $sorteoRepository): Response
+    {
+        if ($this->getUser()) {
             $sorteos = [];
             if (!$this->isGranted('ROLE_ADMIN')) {
                 $sorteos = $sorteoRepository->findAll();
             }
-            return $this->render('main/index.html.twig', [
+            return $this->render('main/view_sorteos.html.twig', [
                 'controller_name' => 'MainController',
                 'sorteos' => $sorteos,
             ]);
         }
         return $this->redirectToRoute('app_login');
     }
+
+    
+    #[Route('/viewcoupons', name: 'app_main_view_coupons')]
+    public function viewCoupons(): Response
+    {
+        if ($this->getUser()) {
+            $coupons = [];
+            if (!$this->isGranted('ROLE_ADMIN')) {
+                $coupons = $this->getUser()->getCoupons();
+            }
+            return $this->render('main/view_coupons.html.twig', [
+                'controller_name' => 'MainController',
+                'coupons' => $coupons,
+            ]);
+        }
+        return $this->redirectToRoute('app_login');
+    }
+
+
     #[Route('/addcash', name: 'app_add_cash')]
     public function addCash(Request $request, EntityManagerInterface $entityManager){
         if ($this->getUser() && !$this->isGranted('ROLE_ADMIN')) {

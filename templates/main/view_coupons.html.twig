@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ludopatiaaaa DC
+{% endblock %}
+
+{% block body %}
+	<h1>Ludopatiaaaa DC</h1>
+	{% if is_granted('ROLE_ADMIN') %}
+	{% else %}
+		<h3>mis cupones:</h3>
+{# TODO: VER CUPONES #}
+		{# {% for sorteo in sorteos %}
+			<fieldset>
+				{{ sorteo.name }}
+				<a href="/sorteo/{{sorteo.id}}">Comprar Cupón</a>
+			</fieldset>
+			<br>
+		{% endfor %} #}
+
+		<a href="{{ path('app_main') }}">back to Main</a>
+	{% endif %}
+{% endblock %}
