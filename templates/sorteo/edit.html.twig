@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Sorteo{% endblock %}
+
+{% block body %}
+    <h1>Edit Sorteo</h1>
+
+    {{ include('sorteo/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_sorteo_index') }}">back to list</a>
+
+    {{ include('sorteo/_delete_form.html.twig') }}
+{% endblock %}
