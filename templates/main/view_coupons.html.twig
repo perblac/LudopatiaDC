@@ -19,10 +19,12 @@
 						El sorteo termina el :
 						{{ coupon.sorteo.sorteoDate| format_datetime()}}
 					{%  endif %}
-					{% if coupon.sorteo.winnerCoupon == app.user %}
+					{% if coupon.sorteo.winnerCoupon == coupon and coupon.state < 3%}
 						Eres el ganador de este sorteo
-						<a href="">
+						<a href="/coupon/collect/{{coupon.id}}">
 							COBRAR</a>
+					{% elseif coupon.state == 3 %}
+						Ya está cobrado
 					{%  endif %}
 				</fieldset>
 				<br>

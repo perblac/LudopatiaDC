@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Coupon
+{% endblock %}
+
+{% block body %}
+	<h1>¿Desea cobrar este cupón?</h1>
+
+	{{coupon.number}}
+	<form action='/coupon/collect/{{coupon.id}}' method='POST'>
+		<button type='submit' name='collect' value='Lo quiero'>Quiero cobrarlo</button>
+	</form>
+{% endblock %}

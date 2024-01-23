@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Coupon;
 use App\Form\CouponType;
 use App\Repository\CouponRepository;
+use DateInterval;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +52,32 @@ class CouponController extends AbstractController
         ]);
     }
 
-    
+    #[Route('/collect/{id}', name: 'app_coupon_collect', methods: ['GET', 'POST'])]
+    public function collect(Coupon $coupon, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $fecha = new DateTime();
+        $user = $this->getUser();
+        if ($request->request->get('collect')) {
+
+            if($coupon->getOwner() == $user &&
+                $coupon->getState() == 2 &&
+                $coupon->getSorteo()->getSorteoDate() > $fecha->sub(new DateInterval('P7D'))     
+            ) {
+                $coupon->setState(3);
+                $saldoUser = $user->getCash();
+                $user->setCash($saldoUser + $coupon->getSorteo()->getPrize());
+                $entityManager->persist($coupon);
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_main_view_coupons');
+            }
+    }
+        return $this->render('coupon/collect.html.twig', [
+            'coupon' => $coupon,
+        ]);
+    }
+
     #[Route('/buy/{id}', name: 'app_coupon_buy', methods: ['GET','POST'])]
     public function buyCoupon(Coupon $coupon, Request $request, EntityManagerInterface $entityManager): Response
     {

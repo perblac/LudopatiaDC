@@ -50,19 +50,34 @@ class MainController extends AbstractController
 
     
     #[Route('/viewcoupons', name: 'app_main_view_coupons')]
-    public function viewCoupons(): Response
+    public function viewCoupons(SorteoRepository $sorteoRepository, EntityManagerInterface $entityManager): Response
     {
+        $fecha = new DateTime();
+        // Realizar los Sorteos ya finalizados
+        $sorteos = $sorteoRepository->findAll();
+        foreach( $sorteos as $sorteo){
+            if($sorteo->getSorteoDate() < $fecha && $sorteo->getWinnerCoupon() == null){
+                $couponsSorteo = $sorteo->getCoupons();
+                $arrayCoupons = $couponsSorteo->toArray();
+                shuffle($arrayCoupons);
+                $winnerCoupon = $arrayCoupons[0];
+                $winnerCoupon->setState(2);
+                $sorteo->setWinnerCoupon($winnerCoupon);
+                
+                $entityManager->persist($sorteo);
+                $entityManager->flush();
+            }
+        }
+
         if ($this->getUser()) {
             $coupons = [];
             if (!$this->isGranted('ROLE_ADMIN')) {
                 $coupons = $this->getUser()->getCoupons();
-                $dateNow = new DateTime();
-                //dd($coupons);
             }
             return $this->render('main/view_coupons.html.twig', [
                 'controller_name' => 'MainController',
                 'coupons' => $coupons,
-                'dateNow' => $dateNow,
+                'dateNow' => $fecha,
             ]);
         }
         return $this->redirectToRoute('app_login');
