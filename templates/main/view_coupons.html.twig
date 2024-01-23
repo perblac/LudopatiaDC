@@ -6,17 +6,27 @@
 {% block body %}
 	<h1>Ludopatiaaaa DC</h1>
 	{% if is_granted('ROLE_ADMIN') %}
-	{% else %}
-		<h3>mis cupones:</h3>
-{# TODO: VER CUPONES #}
-		{# {% for sorteo in sorteos %}
-			<fieldset>
-				{{ sorteo.name }}
-				<a href="/sorteo/{{sorteo.id}}">Comprar Cupón</a>
-			</fieldset>
-			<br>
-		{% endfor %} #}
+		{% else %}
+			<h3>mis cupones:</h3>
 
-		<a href="{{ path('app_main') }}">back to Main</a>
+			{% for coupon in coupons %}
+				<fieldset>
+					{{ coupon.number}}
+					{{ coupon.sorteo.name }}
+					{% if coupon.sorteo.sorteoDate < dateNow %}
+						Fecha pasada
+					{% else %}
+						El sorteo termina el :
+						{{ coupon.sorteo.sorteoDate| format_datetime()}}
+					{%  endif %}
+					{% if coupon.sorteo.winnerCoupon == app.user %}
+						Eres el ganador de este sorteo
+						<a href="">
+							COBRAR</a>
+					{%  endif %}
+				</fieldset>
+				<br>
+			{% endfor %}
+			<a href="{{ path('app_main') }}">back to Main</a>
 	{% endif %}
 {% endblock %}

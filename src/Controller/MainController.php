@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\SorteoRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,17 +56,20 @@ class MainController extends AbstractController
             $coupons = [];
             if (!$this->isGranted('ROLE_ADMIN')) {
                 $coupons = $this->getUser()->getCoupons();
+                $dateNow = new DateTime();
+                //dd($coupons);
             }
             return $this->render('main/view_coupons.html.twig', [
                 'controller_name' => 'MainController',
                 'coupons' => $coupons,
+                'dateNow' => $dateNow,
             ]);
         }
         return $this->redirectToRoute('app_login');
     }
 
 
-    #[Route('/addcash', name: 'app_add_cash', methods: ['POST'])]
+    #[Route('/addcash', name: 'app_add_cash', methods: ['GET','POST'])]
     public function addCash(Request $request, EntityManagerInterface $entityManager){
         if ($this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             if($request->request->get("cash")){

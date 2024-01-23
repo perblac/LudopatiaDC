@@ -125,6 +125,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->coupons->contains($coupon)) {
             $this->coupons->add($coupon);
             $coupon->setOwner($this);
+            $coupon->setState(1);
         }
 
         return $this;

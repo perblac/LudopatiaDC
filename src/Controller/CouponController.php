@@ -75,8 +75,8 @@ class CouponController extends AbstractController
             // restamos pelas
             $saldoUser -= $precioCupon;
             // damos el cupon al user
-            $coupon->setOwner($user);
-            $coupon->setState(1);
+           // $coupon->setOwner($user);
+            //$coupon->setState(1);
             $entityManager->persist($coupon);
 
             $user->setCash($saldoUser);
