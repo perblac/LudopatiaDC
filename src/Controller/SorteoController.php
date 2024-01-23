@@ -17,6 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/sorteo')]
 class SorteoController extends AbstractController
 {
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/', name: 'app_sorteo_index', methods: ['GET'])]
     public function index(SorteoRepository $sorteoRepository): Response
     {

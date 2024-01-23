@@ -16,11 +16,65 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/user')]
 class UserController extends AbstractController
 {
-    #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    
+    
+    #[Route('/', name: 'app_user_index', methods: ['GET', 'POST'])]
+    public function index(UserRepository $userRepository, Request $request): Response
     {
+        
+        
+        
+        
+        
+
+        $users = $userRepository->findAll();
+        $nuevaLista = [];
+        foreach($users as $user) {
+            $coupons = $user->getCoupons()->toArray();
+            $userAsArray['id'] = $user->getId();
+            $userAsArray['username'] = $user->getUsername();
+            $userAsArray['roles'] = $user->getRoles();
+            $userAsArray['cash'] = $user->getCash();
+            $totalSpent = 0;
+            $totalPrizes = 0;
+            foreach($coupons as $coupon) {
+                $totalSpent += $coupon->getSorteo()->getCouponPrice();
+                if ($coupon->getState() > 1) ++$totalPrizes;
+            }
+            $userAsArray['totalSpent'] = $totalSpent;
+            $userAsArray['totalPrizes'] = $totalPrizes;
+            $nuevaLista[] = $userAsArray;
+        }
+
+        
+
+        if ($request->request->get('byCash')) {
+            usort($nuevaLista, function ($a, $b) {
+                if ($a['cash'] == $b['cash']) {
+                    return 0;
+                }
+                return ($a['cash'] > $b['cash']) ? -1 : 1;
+            });
+        }
+        if($request->request->get('byTotalSpent')){
+            usort($nuevaLista, function ($a, $b) {
+                if ($a['totalSpent'] == $b['totalSpent']) {
+                    return 0;
+                }
+                return ($a['totalSpent'] > $b['totalSpent']) ? -1 : 1;
+            });
+        }
+        if($request->request->get('byTotalPrizes')){
+            usort($nuevaLista, function ($a, $b) {
+                if ($a['totalPrizes'] == $b['totalPrizes']) {
+                    return 0;
+                }
+                return ($a['totalPrizes'] > $b['totalPrizes']) ? -1 : 1;
+            });
+        }
+
         return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $nuevaLista,
         ]);
     }
 

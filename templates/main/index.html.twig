@@ -8,6 +8,7 @@
 	{% if is_granted('ROLE_ADMIN') %}
 		<a href="/user">Administrar usuarios</a>
 		<a href="/sorteo/new">Crear Sorteo</a>
+		<a href="/sorteo">Ver Sorteos</a>
 	{% else %}
 		<a href="{{ path('app_main_view_sorteos') }}">Comprar cupones</a><br>		
 		<a href="{{ path('app_main_view_coupons') }}">Ver mis cupones</a>

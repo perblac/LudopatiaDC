@@ -24,8 +24,8 @@
 					<td>{{ user.username }}</td>
 					<td>{{ user.roles ? user.roles|json_encode : '' }}</td>
 					<td>{{ user.cash}}</td>
-					<td></td>
-					<td></td>
+					<td>{{ user.totalSpent }}</td>
+					<td>{{ user.totalPrizes }}</td>
 				</tr>
 			{% else %}
 				<tr>
@@ -35,13 +35,13 @@
 		</tbody>
 	</table>
 
-	<form action='/user' method='POST'>
+	<form action='/user/' method='POST'>
 		<button type='submit' name='byCash' value='1'>Ordenar por saldo</button>
 	</form>
-	<form action='/user' method='POST'>
-		<button type='submit' name='byTotalSpent' value=''>Ordenar por dinero gastado</button>
+	<form action='/user/' method='POST'>
+		<button type='submit' name='byTotalSpent' value='1'>Ordenar por dinero gastado</button>
 	</form>
-	<form action='/user' method='POST'>
-		<button type='submit' name='byTotalPrizes' value=''>Ordenar números premiados</button>
+	<form action='/user/' method='POST'>
+		<button type='submit' name='byTotalPrizes' value='1'>Ordenar números premiados</button>
 	</form>
 {% endblock %}
