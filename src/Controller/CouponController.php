@@ -66,6 +66,7 @@ class CouponController extends AbstractController
         }
 
         if ($coupon->getState() != 0) {
+            // el cupon no esta disponible (ya se vendió)
             $state = 2;
         }
 

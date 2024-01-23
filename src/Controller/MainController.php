@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\SorteoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,12 +30,14 @@ class MainController extends AbstractController
     }
 
     #[Route('/viewsorteos', name: 'app_main_view_sorteos')]
-    public function viewSorteos(SorteoRepository $sorteoRepository): Response
+    public function viewSorteos( SorteoRepository $sorteoRepository): Response
     {
         if ($this->getUser()) {
             $sorteos = [];
             if (!$this->isGranted('ROLE_ADMIN')) {
-                $sorteos = $sorteoRepository->findAll();
+                // $sorteos = $sorteoRepository->findAll();
+                $sorteos = $sorteoRepository->findAvailable();
+                // dd($sorteos);
             }
             return $this->render('main/view_sorteos.html.twig', [
                 'controller_name' => 'MainController',
@@ -62,14 +65,17 @@ class MainController extends AbstractController
     }
 
 
-    #[Route('/addcash', name: 'app_add_cash')]
+    #[Route('/addcash', name: 'app_add_cash', methods: ['POST'])]
     public function addCash(Request $request, EntityManagerInterface $entityManager){
         if ($this->getUser() && !$this->isGranted('ROLE_ADMIN')) {
             if($request->request->get("cash")){
                 $cash = $request->request->get("cash");
-                $actualCash = $this->getUser()->getCash();
-                $actualCash += $cash;
-                $this->getUser()->setCash($actualCash);
+                // solo añadimos pasta si es positiva
+                if ($cash > 0) {
+                    $actualCash = $this->getUser()->getCash();
+                    $actualCash += $cash;
+                    $this->getUser()->setCash($actualCash);
+                }
 
                 $entityManager->flush();
 

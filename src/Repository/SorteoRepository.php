@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Sorteo;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -35,6 +36,18 @@ class SorteoRepository extends ServiceEntityRepository
 //            ->getResult()
 //        ;
 //    }
+
+   public function findAvailable(): array
+   {
+       return $this->createQueryBuilder('s')
+           ->andWhere('s.sorteoDate > :val')
+           ->setParameter('val', new DateTime())
+           ->andWhere('s.winnerCoupon is null')
+           ->orderBy('s.id', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
 
 //    public function findOneBySomeField($value): ?Sorteo
 //    {
